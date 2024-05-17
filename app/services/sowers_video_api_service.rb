@@ -17,7 +17,20 @@ class SowersVideoApiService
       raise "Error fetching data: #{response.code} - #{response.message}"
     end
 
-    # binding.pry
+    Video.not_downloaded.each do |video|
+      success = VideoDownloaderService.new(video).download
+      if success
+        video.update(is_downloaded: true)
+        puts "Video for presentation_id: #{video.presentation_id} updated in the database(is_downloaded: true)"
+      else
+        puts "Failed to download video for presentation_id: #{video.presentation_id}. Shutting down the server..."
+        Rails.logger.error("Failed to download video for presentation_id: #{video.presentation_id}. Shutting down the server...")
+        exit(1)
+      end
+    end
 
+    Video.downloaded_but_not_uploaded.each do |video|
+      
+    end
   end
 end

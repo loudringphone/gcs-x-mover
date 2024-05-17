@@ -22,12 +22,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_16_123328) do
     t.string "assignee_name"
     t.string "gospel"
     t.string "country"
+    t.string "title"
     t.boolean "is_downloaded", default: false
     t.string "download_directory"
     t.boolean "is_uploaded", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["presentation_id"], name: "index_videos_on_presentation_id", unique: true
+    t.index ["title"], name: "index_videos_on_title", unique: true
   end
 
 end

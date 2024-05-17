@@ -9,6 +9,7 @@ class CreateVideos < ActiveRecord::Migration[7.1]
       t.string :gospel
       t.string :country
 
+      t.string :title
       t.boolean :is_downloaded, default: false
       t.string :download_directory
       t.boolean :is_uploaded, default: false
@@ -17,5 +18,6 @@ class CreateVideos < ActiveRecord::Migration[7.1]
     end
 
     add_index :videos, :presentation_id, unique: true
+    add_index :videos, :title, unique: true
   end
 end
