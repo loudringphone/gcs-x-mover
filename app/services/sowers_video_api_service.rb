@@ -1,21 +1,23 @@
 class SowersVideoApiService
   include HTTParty
-  base_uri "https://sowersworld.org/presentations/get_videos_for_completed_missions_without_youtube_url?api_key=#{ENV['SOWERS_API']}" # Replace with your API base URL
 
-  def fetch_videos
-    response = self.class.get('/videos') # Adjust the endpoint as per your API documentation
+  def get_videos_for_completed_missions
+    url ="#{ENV['PRODUCTION_HOST']}/api/presentations/get_videos_for_completed_missions_without_youtube_url?api_key=#{ENV['SOWERS_API']}"
+    response = HTTParty.get(url)
+
     if response.success?
-      videos_data = JSON.parse(response.body)
-      videos_data.each do |video_data|
-        Video.create!(
-          video_id: video_data['id'],
-          video_url: video_data['url'],
-          download_directory: 'path/to/download/directory' # Set the actual download directory here
-        )
+      videos = JSON.parse(response.body)
+      videos.map do |video|
+        service = Videos::CreateOrUpdate.new(video)
+        if service.perform
+
+        end
       end
     else
-      # Handle API request failure
-      Rails.logger.error("API request failed: #{response.code} - #{response.body}")
+      raise "Error fetching data: #{response.code} - #{response.message}"
     end
+
+    # binding.pry
+
   end
 end
