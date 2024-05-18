@@ -12,7 +12,17 @@ class VideoDownloaderService
 
   def download
     begin
-      file_path = Rails.root.join('public', 'videos', filename)
+      # desktop_path = case RUBY_PLATFORM
+      # when /darwin/  # macOS
+      #   File.join(Dir.home, 'Desktop')
+      # when /win32|win64|cygwin/  # Windows
+      #   File.join(Dir.home, 'Desktop')
+      # else  # Assume Linux/Unix
+      #   File.join(Dir.home, 'Desktop')
+      # end
+
+      desktop_path = File.join(Dir.home, 'Desktop')
+      file_path = File.join(desktop_path, 'Sowers', filename)
       FileUtils.mkdir_p(File.dirname(file_path))
       puts "Downloading video for presentation_id: #{presentation_id}"
       URI.open(cloud_url) do |v|

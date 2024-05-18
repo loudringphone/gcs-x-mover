@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_16_123328) do
     t.boolean "is_downloaded", default: false
     t.string "download_directory"
     t.boolean "is_uploaded", default: false
+    t.string "youtube_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["presentation_id"], name: "index_videos_on_presentation_id", unique: true

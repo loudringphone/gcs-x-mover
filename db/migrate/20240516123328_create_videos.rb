@@ -13,7 +13,7 @@ class CreateVideos < ActiveRecord::Migration[7.1]
       t.boolean :is_downloaded, default: false
       t.string :download_directory
       t.boolean :is_uploaded, default: false
-
+      t.string :youtube_id
       t.timestamps
     end
 
