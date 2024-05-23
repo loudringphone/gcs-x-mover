@@ -3,12 +3,12 @@ class VideosController < ApplicationController
     # Handle the callback from YouTube OAuth2 authorization
     authorization_code = params[:code]
     scope = params[:scope]
-    if session[:google_access_token].nil? || session[:google_refresh_token].nil?
+    google_account = GoogleAccount.first
+    if google_account.access_token.nil?
       account = Yt::Account.new authorization_code:, redirect_uri: ENV['GOOGLE_OAUTH2_CALLBACK_URL']
-      session[:google_access_token] = account.access_token
-      session[:google_refresh_token] = account.refresh_token
+      google_account.update(access_token: account.access_token, refresh_token: account.refresh_token)
     else
-      account = Yt::Account.new access_token: session[:google_access_token]
+      account = Yt::Account.new access_token: google_account.access_token
     end
 
     uploaded_videos = []
