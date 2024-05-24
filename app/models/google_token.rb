@@ -1,2 +1,0 @@
-class GoogleToken < ApplicationRecord
-end
