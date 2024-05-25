@@ -1,29 +1,24 @@
 class VideosController < ApplicationController
   def google_oauth2_callback
-    # Handle the callback from YouTube OAuth2 authorization
     authorization_code = params[:code]
     scope = params[:scope]
-    google_account = GoogleAccount.first
-    if google_account.access_token.nil?
-      account = Yt::Account.new authorization_code:, redirect_uri: ENV['GOOGLE_OAUTH2_CALLBACK_URL']
+    account = Yt::Account.new authorization_code:, redirect_uri: ENV['GOOGLE_OAUTH2_CALLBACK_URL']
+    yt_client_id = Yt.configuration.client_id
+    google_account = GoogleAccount.find_by(client_id: yt_client_id)
+    if google_account
       google_account.update(access_token: account.access_token, refresh_token: account.refresh_token)
     else
-      account = Yt::Account.new access_token: google_account.access_token
+      google_account = GoogleAccount.create(access_token: account.access_token, refresh_token: account.refresh_token, client_id: yt_client_id)
     end
 
-    uploaded_videos = []
-    Video.downloaded_but_not_uploaded.each do |v|
-      upload = account.upload_video v.download_directory, title: v.title, description: v.gospel, privacy_status: 'public'
-      youtube_id = upload.id
-      youtube_thumbnail = upload.snippet.data['thumbnails']['default']['url']
-      if v.update(youtube_id:, youtube_thumbnail:, is_uploaded: true)
-        service = Videos::UpdatePresentationService.new(video: v)
-        service.perform
-      end
-      uploaded_videos << { youtube_id:, youtube_thumbnail:, presentation_id: v.presentation_id }
-      puts "Video for presentation_id: #{v.presentation_id} updated in the database(youtube_id: #{youtube_id}, youtube_thumbnail: #{youtube_thumbnail}, is_uploaded: true)"
+    case yt_client_id
+    when JSON.parse(ENV["GOOGLE_CLIENT_SECRET1"])["web"]["client_id"]
+      try = 1
+    when JSON.parse(ENV["GOOGLE_CLIENT_SECRET2"])["web"]["client_id"]
+      try = 2
     end
+    Videos::YoutubeUploaderService.new(account:, try:).perform
 
-    render json: { total_videos_uploaded: uploaded_videos.size, uploaded_videos: }
+    render head :ok
   end
 end

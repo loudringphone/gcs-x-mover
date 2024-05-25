@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'fileutils'
 
-class VideoDownloaderService
+class Videos::DownloaderService
   attr_reader :mission_id, :cloud_url, :filename, :presentation_id
   def initialize(video)
     @mission_id = video.mission_id
