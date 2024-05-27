@@ -1,4 +1,4 @@
-class Videos::YoutubeUploaderService
+class Videos::XUploaderService
   attr_reader :account, :try, :file_path
 
   def initialize(account:, try:)
