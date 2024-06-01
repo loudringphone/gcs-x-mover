@@ -1,10 +1,9 @@
 class SowersVideoMoverService
-  include HTTParty
-
+  require "x"
+  require "x/media_uploader"
   def perform
-    url ="#{ENV['PRODUCTION_HOST']}/api/presentations/get_videos_for_completed_missions_without_youtube_id?api_key=#{ENV['SOWERS_API']}"
+    url ="#{ENV['PRODUCTION_HOST']}/api/presentations/get_videos_for_completed_missions_without_tweet_ids?api_key=#{ENV['SOWERS_API']}"
     response = HTTParty.get(url)
-
     if response.success?
       videos = JSON.parse(response.body)
       videos.map do |video|
@@ -28,15 +27,26 @@ class SowersVideoMoverService
         exit(1)
       end
     end
-    google_client_secret = JSON.parse(ENV["GOOGLE_CLIENT_SECRET1"])["web"]
-    google_account = GoogleAccount.find_by(client_id: Yt.configuration.client_id)
-    if google_account
-      account = Yt::Account.new refresh_token: google_account.refresh_token
-      Videos::YoutubeUploaderService.new(account:, try: 1).perform
-    else
-      youtube_upload_scope = 'youtube.upload'
-      auth_url = Yt::Account.new(scopes: [youtube_upload_scope], redirect_uri: ENV['GOOGLE_OAUTH2_CALLBACK_URL']).authentication_url
-      Launchy.open(auth_url)
+    Video.downloaded_not_splitted.each do |video|
+      video_splitter = VideoSplitter.new(video:)
+      video_splitter.split_video
+    end
+
+    Video.splitted_not_uploaded.each do |video|
+      splitted_files = video.splitted_files
+      splitted_files.each_with_index do |splitted_file, i|
+        next if video.tweet_ids.size > i
+
+        x_uploader = Videos::XUploaderService.new(file_path: splitted_file, text: video.title + " - Part #{i+1}")
+        tweet_id = x_uploader.upload
+        video.update(tweet_ids: video.tweet_ids + [tweet_id])
+      end
+
+
+      video.update(is_uploaded: true)
+      Videos::UpdatePresentationService.new(video:).perform
+
+
     end
   end
 end

@@ -1,0 +1,11 @@
+google:
+  service: GCS
+  credentials: <%= ENV['GCLOUD_CREDENTIALS'].as_json %>
+  project: <%= ENV['GCLOUD_PROJECT_ID'] %>
+  bucket: <%= ENV['GCLOUD_BUCKET'] %>
+
+google_dev:
+  service: GCS
+  credentials: <%= ENV['GCLOUD_CREDENTIALS'].as_json %>
+  project: <%= ENV['GCLOUD_PROJECT_ID'] %>
+  bucket: <%= ENV['GCLOUD_BUCKET'] %>

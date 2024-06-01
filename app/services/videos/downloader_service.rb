@@ -6,8 +6,8 @@ class Videos::DownloaderService
   def initialize(video)
     @mission_id = video.mission_id
     @cloud_url = video.cloud_url
-    @filename = "#{video.title.gsub(' ', '_')}.mp4"
     @presentation_id = video.presentation_id
+    @filename = "#{video.title.gsub(' ', '_')}.mp4"
   end
 
   def download
@@ -22,7 +22,9 @@ class Videos::DownloaderService
       # end
 
       desktop_path = File.join(Dir.home, 'Desktop')
-      file_path = File.join(desktop_path, 'Sowers', filename)
+
+      file_path = File.join(desktop_path, 'Sowers', mission_id.to_s, filename)
+
       FileUtils.mkdir_p(File.dirname(file_path))
       puts "Downloading video for presentation_id: #{presentation_id}"
       URI.open(cloud_url) do |v|

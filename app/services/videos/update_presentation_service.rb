@@ -2,11 +2,13 @@ class Videos::UpdatePresentationService
   include HTTParty
   base_uri ENV['PRODUCTION_HOST']
 
-  attr_reader :presentation_id, :youtube_id, :youtube_thumbnail
+  attr_reader :presentation_id, :tweet_ids, :thumbnail_url
   def initialize(video:)
     @presentation_id = video.presentation_id
-    @youtube_id = video.youtube_id
-    @youtube_thumbnail = video.youtube_thumbnail
+    @tweet_ids = video.tweet_ids
+    mission_id = video.mission_id
+    presentation_id = video.presentation_id
+    @thumbnail_url = "https://storage.googleapis.com/#{ENV['GCLOUD_BUCKET']}/missions/#{mission_id}/#{presentation_id}/thumbnail.jpg" if video.thumbnail.attached?
   end
 
   def perform
@@ -20,6 +22,6 @@ class Videos::UpdatePresentationService
   private
 
   def presentation_params
-    { youtube_id:, youtube_thumbnail: }
+    { tweet_ids:, thumbnail_url: }
   end
 end

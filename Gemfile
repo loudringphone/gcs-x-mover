@@ -9,7 +9,7 @@ gem "rails", "~> 7.1.3", ">= 7.1.3.2"
 gem "sprockets-rails"
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+# gem "sqlite3", "~> 1.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -30,16 +30,13 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 gem "pg"
-
 gem 'pry'
-
+gem 'dotenv-rails'
+gem 'launchy'
+gem 'streamio-ffmpeg'
 gem 'httparty'
 
-gem 'dotenv-rails'
-
-gem 'yt', '~> 0.32.0'
-
-gem 'launchy'
+gem 'google-cloud-storage'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,3 +54,5 @@ group :development do
   # gem "spring"
 end
 
+
+gem "x", "~> 0.14.1"

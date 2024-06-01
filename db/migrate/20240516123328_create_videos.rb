@@ -12,13 +12,13 @@ class CreateVideos < ActiveRecord::Migration[7.1]
       t.string :title
       t.boolean :is_downloaded, default: false
       t.string :download_directory
+      t.string :x_ids, array: true, default: []
       t.boolean :is_uploaded, default: false
-      t.string :youtube_id
-      t.string :youtube_thumbnail
       t.timestamps
     end
 
     add_index :videos, :presentation_id, unique: true
     add_index :videos, :title, unique: true
+    add_index :videos, :x_ids, using: 'gin'
   end
 end
