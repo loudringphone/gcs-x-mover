@@ -35,10 +35,13 @@ class SowersVideoMoverService
     Video.splitted_not_uploaded.each do |video|
       splitted_files = video.splitted_files
       puts "Start uploading splitted files for presentation_id: #{video.presentation_id}"
+      title = video.title
+      mission_id = video.mission_id
       splitted_files.each_with_index do |splitted_file, i|
         next if video.tweet_ids.size > i
 
-        x_uploader = Videos::XUploaderService.new(file_path: splitted_file, text: video.title + " - Part #{i+1}")
+        text = title + " - Part #{i+1}\n" + "Check this out: #{ENV['PRODUCTION_HOST']}/missions/#{mission_id}"
+        x_uploader = Videos::XUploaderService.new(file_path: splitted_file, text:)
         tweet_id = x_uploader.upload
         video.update(tweet_ids: video.tweet_ids + [tweet_id])
       end
