@@ -21,6 +21,7 @@ class VideoSplitter
       total_seconds = movie.duration
       segments = (total_seconds / duration.to_f).ceil
       new_splitted_files = []
+      puts "Splitting video into #{segments} segments"
       segments.times do |i|
         next if splitted_files.size > i
 

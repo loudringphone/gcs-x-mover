@@ -34,6 +34,7 @@ class SowersVideoMoverService
 
     Video.splitted_not_uploaded.each do |video|
       splitted_files = video.splitted_files
+      puts "Start uploading splitted files for presentation_id: #{video.presentation_id}"
       splitted_files.each_with_index do |splitted_file, i|
         next if video.tweet_ids.size > i
 
@@ -41,12 +42,10 @@ class SowersVideoMoverService
         tweet_id = x_uploader.upload
         video.update(tweet_ids: video.tweet_ids + [tweet_id])
       end
-
-
-      video.update(is_uploaded: true)
+      video.reload
+      puts "Start sending data for presention_id: #{video.presentation_id} to Sowers database..."
       Videos::UpdatePresentationService.new(video:).perform
-
-
+      video.update(is_uploaded: true)
     end
   end
 end
