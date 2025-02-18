@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_01_074937) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_18_112615) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_074937) do
     t.integer "presentation_id"
     t.string "cloud_url"
     t.integer "mission_id"
-    t.string "agency_name"
+    t.string "creator_name"
     t.string "assignee_name"
     t.string "gospel"
     t.string "country"
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_01_074937) do
     t.datetime "updated_at", null: false
     t.boolean "is_splitted", default: false
     t.string "splitted_files", default: [], array: true
+    t.boolean "is_db_updated", default: false
     t.index ["presentation_id"], name: "index_videos_on_presentation_id", unique: true
     t.index ["splitted_files"], name: "index_videos_on_splitted_files", using: :gin
     t.index ["title"], name: "index_videos_on_title", unique: true

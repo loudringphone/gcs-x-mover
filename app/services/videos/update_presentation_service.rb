@@ -7,12 +7,11 @@ class Videos::UpdatePresentationService
     @presentation_id = video.presentation_id
     @tweet_ids = video.tweet_ids
     mission_id = video.mission_id
-    presentation_id = video.presentation_id
     @thumbnail_url = "https://storage.googleapis.com/#{ENV['GCLOUD_BUCKET']}/missions/#{mission_id}/#{presentation_id}/thumbnail.jpg" if video.thumbnail.attached?
   end
 
   def perform
-    self.class.patch("/presentations/#{@presentation_id}",
+    self.class.patch("/presentations/#{presentation_id}",
     body: { presentation: presentation_params },
     headers: {
       'Authorization': "Bearer #{ENV['SOWERS_API']}"
@@ -22,6 +21,6 @@ class Videos::UpdatePresentationService
   private
 
   def presentation_params
-    { tweet_ids:, thumbnail_url: }
+    { id: presentation_id, tweet_ids:, thumbnail_url: }
   end
 end

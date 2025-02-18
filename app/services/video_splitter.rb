@@ -8,7 +8,7 @@ class VideoSplitter
     desktop_path = File.join(Dir.home, 'Desktop')
     @mission_id = video.mission_id
     @presentation_id = video.presentation_id
-    @output_directory = File.join(desktop_path, 'Sowers', @mission_id.to_s, @presentation_id.to_s)
+    @output_directory = File.join(desktop_path, 'Sowers', "m_#{@mission_id.to_s}", "p_#{@presentation_id.to_s}")
     @duration = 140 # Duration in seconds for each segment
     @splitted_files = video.splitted_files
     @video = video
@@ -28,7 +28,7 @@ class VideoSplitter
         if i.zero?
           filename = 'thumbnail.jpg'
           thumbnail_path = output_directory + '/' + filename
-          thumbnail_options = { seek_time: 1, resolution: '124x94' }
+          thumbnail_options = { seek_time: total_seconds/2.0, resolution: '124x94' }
           movie.screenshot(thumbnail_path, thumbnail_options)
           video.thumbnail.attach(io: File.open(thumbnail_path), filename:,key: "missions/#{mission_id}/#{presentation_id}/#{filename}")
         end

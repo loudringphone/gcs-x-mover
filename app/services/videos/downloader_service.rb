@@ -2,11 +2,14 @@ require 'open-uri'
 require 'fileutils'
 
 class Videos::DownloaderService
-  attr_reader :cloud_url, :filename, :presentation_id
+  attr_reader :cloud_url, :file_path
   def initialize(video)
     @cloud_url = video.cloud_url
-    @presentation_id = video.presentation_id
+    mission_id = video.mission_id
+    presentation_id = video.presentation_id
     @filename = "#{presentation_id}.mp4"
+    desktop_path = File.join(Dir.home, 'Desktop')
+    @file_path = File.join(desktop_path, 'Sowers', "m_#{mission_id.to_s}", "p_#{presentation_id.to_s}", filename)
   end
 
   def download
@@ -19,10 +22,6 @@ class Videos::DownloaderService
       # else  # Assume Linux/Unix
       #   File.join(Dir.home, 'Desktop')
       # end
-
-      desktop_path = File.join(Dir.home, 'Desktop')
-
-      file_path = File.join(desktop_path, 'Sowers', filename)
 
       FileUtils.mkdir_p(File.dirname(file_path))
       puts "Downloading video for presentation_id: #{presentation_id}"

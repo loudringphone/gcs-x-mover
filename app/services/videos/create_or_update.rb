@@ -5,7 +5,7 @@ class Videos::CreateOrUpdate
   end
 
   def perform
-    base_title = "#{video_params['mission_id']}/#{video_params['agency_name'].gsub(' ', '')} #{video_params['gospel']} in #{video_params['country']} by #{video_params['assignee_name']}"
+    base_title = "#{video_params['mission_id']}/#{video_params['creator_name'].gsub(' ', '')} #{video_params['gospel']} in #{video_params['country']} by #{video_params['assignee_name']}"
     title = generate_unique_title(base_title)
 
     video = Video.find_or_create_by(
